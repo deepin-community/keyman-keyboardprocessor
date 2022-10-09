@@ -1,0 +1,127 @@
+From a441321cf5e182da8a99359ba008153c37a29235 Mon Sep 17 00:00:00 2001
+From: Tim Eves <tim_eves@sil.org>
+Date: Mon, 14 Jan 2019 09:44:43 +0700
+Subject: [PATCH] Newer compilers are complaining about catching std::exception
+ derived class by value, this fixes that.
+
+---
+ .../engine/keyboardprocessor/src/km_kbp_context_api.cpp   | 8 ++++----
+ .../engine/keyboardprocessor/src/km_kbp_keyboard_api.cpp  | 2 +-
+ .../engine/keyboardprocessor/src/km_kbp_options_api.cpp   | 4 ++--
+ common/engine/keyboardprocessor/src/km_kbp_state_api.cpp  | 4 ++--
+ .../engine/keyboardprocessor/src/mock/mock_processor.cpp  | 2 +-
+ 5 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/common/engine/keyboardprocessor/src/km_kbp_context_api.cpp b/common/engine/keyboardprocessor/src/km_kbp_context_api.cpp
+index 23915acf0..243fb41a3 100644
+--- a/src/km_kbp_context_api.cpp
++++ b/src/km_kbp_context_api.cpp
+@@ -43,7 +43,7 @@ namespace {
+       *out_ptr = new km_kbp_context_item[res.size()];
+       std::move(res.begin(), res.end(), *out_ptr);
+     }
+-    catch(std::bad_alloc)
++    catch (std::bad_alloc &)
+     {
+       return KM_KBP_STATUS_NO_MEM;
+     }
+@@ -159,7 +159,7 @@ km_kbp_status km_kbp_context_get(km_kbp_context const *ctxt,
+   {
+     *out_ptr = new km_kbp_context_item[ctxt->size() + 1];
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+@@ -199,7 +199,7 @@ km_kbp_status km_kbp_context_append(km_kbp_context *ctxt,
+     {
+       ctxt->emplace_back(*ci);
+     }
+-  } catch(std::bad_alloc) {
++  } catch (std::bad_alloc &) {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+ 
+@@ -226,7 +226,7 @@ km_kbp_status km_kbp_context_shrink(km_kbp_context *ctxt, size_t num,
+         ci++;
+       }
+     }
+-  } catch(std::bad_alloc) {
++  } catch (std::bad_alloc &) {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+ 
+diff --git a/common/engine/keyboardprocessor/src/km_kbp_keyboard_api.cpp b/common/engine/keyboardprocessor/src/km_kbp_keyboard_api.cpp
+index dbc6c173f..26948e72a 100644
+--- a/src/km_kbp_keyboard_api.cpp
++++ b/src/km_kbp_keyboard_api.cpp
+@@ -53,7 +53,7 @@ km_kbp_keyboard_load(km_kbp_path_name kb_path, km_kbp_keyboard **keyboard)
+     }
+     *keyboard = static_cast<km_kbp_keyboard *>(kp);
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+diff --git a/common/engine/keyboardprocessor/src/km_kbp_options_api.cpp b/common/engine/keyboardprocessor/src/km_kbp_options_api.cpp
+index e50b0a331..1a82877c1 100644
+--- a/src/km_kbp_options_api.cpp
++++ b/src/km_kbp_options_api.cpp
+@@ -73,7 +73,7 @@ km_kbp_state_options_update(km_kbp_state *state, km_kbp_option_item const *opt)
+         return KM_KBP_STATUS_KEY_ERROR;
+     }
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+@@ -98,7 +98,7 @@ km_kbp_state_options_to_json(km_kbp_state const *state, char *buf, size_t *space
+ // TODO: Fix
+ //    jo << state->options();
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     *space = 0;
+     return KM_KBP_STATUS_NO_MEM;
+diff --git a/common/engine/keyboardprocessor/src/km_kbp_state_api.cpp b/common/engine/keyboardprocessor/src/km_kbp_state_api.cpp
+index 7dc9c1fe3..97afa60fe 100644
+--- a/src/km_kbp_state_api.cpp
++++ b/src/km_kbp_state_api.cpp
+@@ -35,7 +35,7 @@ km_kbp_status km_kbp_state_create(km_kbp_keyboard * keyboard,
+   {
+     *out = new km_kbp_state(static_cast<abstract_processor&>(*keyboard), env);
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     return KM_KBP_STATUS_NO_MEM;
+   }
+@@ -181,7 +181,7 @@ km_kbp_status km_kbp_state_to_json(km_kbp_state const *state,
+         << "actions" << state->actions()
+         << json::close;
+   }
+-  catch (std::bad_alloc)
++  catch (std::bad_alloc &)
+   {
+     *space = 0;
+     return KM_KBP_STATUS_NO_MEM;
+diff --git a/common/engine/keyboardprocessor/src/mock/mock_processor.cpp b/common/engine/keyboardprocessor/src/mock/mock_processor.cpp
+index d139a577f..d12e8e302 100644
+--- a/src/mock/mock_processor.cpp
++++ b/src/mock/mock_processor.cpp
+@@ -163,7 +163,7 @@ namespace km {
+ 
+         state->actions().commit();
+       }
+-      catch (std::bad_alloc)
++      catch (std::bad_alloc &)
+       {
+         state->actions().clear();
+         return KM_KBP_STATUS_NO_MEM;
+-- 
+2.17.1
+

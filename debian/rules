@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE=1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# xenial needs this to be explicit
+export LC_ALL=C.UTF-8
+
+%:
+	dh $@
+
+override_dh_missing:
+	dh_missing --fail-missing

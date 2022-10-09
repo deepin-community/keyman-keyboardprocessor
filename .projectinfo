@@ -1,0 +1,1 @@
+{"project":"keyman-keyboardprocessor","type":"","version":"11.0.101.3","hierarchy":"base","priority":"","maintainer":"","packager":"","builddeps":" debhelper (\u003e= 11), meson (\u003e= 0.45), ninja-build, ","homepage":" https://www.keyman.com","git":"https://salsa.debian.org/input-method-team/keyman-keyboardprocessor.git"}
