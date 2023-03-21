@@ -1,8 +1,12 @@
-keyman-keyboardprocessor (11.0.101-3+u004) UNRELEASED; urgency=medium
+keyman-keyboardprocessor (11.0.101-3deepin) unstable; urgency=medium
 
+  [ Debian Input Method Team ]
   * update
 
- -- Debian Input Method Team <debian-input-method@lists.debian.org>  Sun, 24 Apr 2022 11:32:15 +0800
+  [ Yutao Meng ]
+  * Regulate version name
+
+ -- Yutao Meng <mengyutao@uniontech.com>  Tue, 21 Mar 2023 14:11:03 +0800
 
 keyman-keyboardprocessor (11.0.101-3) unstable; urgency=medium
 
