@@ -1,3 +1,9 @@
+keyman-keyboardprocessor (11.0.101-4deepin1) unstable; urgency=medium
+
+  * Normalize ver2 (XdeepinY).
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Tue, 27 Aug 2024 16:03:54 +0800
+
 keyman-keyboardprocessor (11.0.101-4deepin) unstable; urgency=medium
 
   [ Debian Input Method Team ]
